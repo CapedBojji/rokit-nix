@@ -50,6 +50,11 @@
             $out/bin/rokit self-install
             rm -rf $out/bin/bin
           ''; 
+
+          meta = with pkgs.lib; {
+            description = "Next-generation toolchain manager for Roblox projects.";
+            license = licenses.mit;
+          };
         };
 
         devenv.shells.default = {
