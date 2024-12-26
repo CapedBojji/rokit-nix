@@ -1,2 +1,5 @@
 .devenv
 .devenv
+result/
+result
+/result

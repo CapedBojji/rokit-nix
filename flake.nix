@@ -19,7 +19,7 @@
     extra-substituters = "https://devenv.cachix.org";
   };
 
-  outputs = inputs@{ flake-parts, devenv-root, ... }:
+  outputs = inputs@{ flake-parts, devenv-root, nixpkgs, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
         inputs.devenv.flakeModule
@@ -32,8 +32,7 @@
         # system.
 
         # Equivalent to  inputs'.nixpkgs.legacyPackages.hello;
-        packages.default = let 
-        in pkgs.rustPlatform.buildRustPackage rec {
+        packages.default = pkgs.rustPlatform.buildRustPackage rec {
           owner = "rojo-rbx"; 
           pname = "rokit";
           version = "v1.0.0";
@@ -45,52 +44,27 @@
           };
 
           cargoHash = "sha256-Z/egZ/OC68GbJjwMOrCrUX2JWMqXwppoSzz0q4Nbg+A=";
-          postInstall =''
-            export ROKIT_ROOT=$out/bin
-            $out/bin/rokit self-install
-            rm -rf $out/bin/bin
-          ''; 
+          # postInstall =''
+          #   export ROKIT_ROOT=$out
+          #   $out/bin/rokit self-install
+          #   # rm -rf $out/bin/bin
+          # ''; 
 
           meta = with pkgs.lib; {
             description = "Next-generation toolchain manager for Roblox projects.";
             license = licenses.mit;
           };
         };
-
         devenv.shells.default = {
           devenv.root =
             let
               devenvRootFileContent = builtins.readFile devenv-root.outPath;
             in
             pkgs.lib.mkIf (devenvRootFileContent != "") devenvRootFileContent;
-
-          name = "my-project";
-
-          imports = [
-            # This is just like the imports in devenv.nix.
-            # See https://devenv.sh/guides/using-with-flake-parts/#import-a-devenv-module
-            # ./devenv-foo.nix
-          ];
-
+          name = "rokit dev shell";
           # https://devenv.sh/reference/options/
-          packages = with pkgs; [ config.packages.default git cargo rustc];
-
-          enterShell = ''
-
-            hello
-          '';
-
-          processes.hello.exec = "hello";
-
-          env.ROKIT_ROOT = "/home/floch/flakes/rokit/testroot";
+          packages = with pkgs; [ git cargo rustc];
         };
-
-      };
-      flake = {
-        # The usual flake attributes can be defined here, including system-
-        # agnostic ones like nixosModule and system-enumerating ones, although
-        # those are more easily expressed in perSystem.
-
       };
     };
 }
