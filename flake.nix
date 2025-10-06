@@ -19,7 +19,7 @@
     extra-substituters = "https://devenv.cachix.org";
   };
 
-  outputs = inputs@{ flake-parts, devenv-root, nixpkgs, ... }:
+  outputs = inputs@{ flake-parts, devenv-root, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
         inputs.devenv.flakeModule
@@ -43,7 +43,7 @@
               hash = "sha256-7DVToKKq3omZOlLMIcthAS8PdvJ4zaKKDAU5HbDIEJc=";
           };
 
-          cargoHash = "sha256-Z/egZ/OC68GbJjwMOrCrUX2JWMqXwppoSzz0q4Nbg+A=";
+          cargoHash = "sha256-117kiiZ3ELP6S7SpNHJUBqqCKkVucxjfSmtRE83Zm/8=";
           # postInstall =''
           #   export ROKIT_ROOT=$out
           #   $out/bin/rokit self-install
@@ -55,16 +55,32 @@
             license = licenses.mit;
           };
         };
+
         devenv.shells.default = {
-          devenv.root =
-            let
-              devenvRootFileContent = builtins.readFile devenv-root.outPath;
-            in
-            pkgs.lib.mkIf (devenvRootFileContent != "") devenvRootFileContent;
-          name = "rokit dev shell";
+          name = "my-project";
+
+          imports = [
+            # This is just like the imports in devenv.nix.
+            # See https://devenv.sh/guides/using-with-flake-parts/#import-a-devenv-module
+            # ./devenv-foo.nix
+          ];
+
           # https://devenv.sh/reference/options/
-          packages = with pkgs; [ git cargo rustc];
+          packages = [ config.packages.default ];
+
+          enterShell = ''
+            hello
+          '';
+
+          processes.hello.exec = "hello";
         };
+
+      };
+      flake = {
+        # The usual flake attributes can be defined here, including system-
+        # agnostic ones like nixosModule and system-enumerating ones, although
+        # those are more easily expressed in perSystem.
+
       };
     };
 }
