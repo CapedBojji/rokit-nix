@@ -40,7 +40,7 @@
               owner = owner;
               repo = pname;
               rev = version;
-              hash = "sha256-cGsxfz3AT8W/EYk3QxVfZ8vd6zGNx1Gn6R1SWCYbVz0=";
+              hash = "sha256-7DVToKKq3omZOlLMIcthAS8PdvJ4zaKKDAU5HbDIEJc=";
           };
 
           cargoHash = "sha256-Z/egZ/OC68GbJjwMOrCrUX2JWMqXwppoSzz0q4Nbg+A=";
