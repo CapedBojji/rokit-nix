@@ -35,7 +35,7 @@
         packages.default = pkgs.rustPlatform.buildRustPackage rec {
           owner = "rojo-rbx"; 
           pname = "rokit";
-          version = "v1.0.0";
+          version = "v1.2.0";
           src = pkgs.fetchFromGitHub {
               owner = owner;
               repo = pname;
